@@ -1,5 +1,7 @@
 import datetime
 
+import path
+
 from qstrader import settings
 from qstrader.strategy.base import AbstractStrategy
 from qstrader.event import SignalEvent, EventType
@@ -66,5 +68,5 @@ if __name__ == "__main__":
         settings.DEFAULT_CONFIG_FILENAME, testing
     )
     tickers = ["SPY"]
-    filename = None
+    filename = path.Path("data", "SPY.csv")
     run(config, testing, tickers, filename)

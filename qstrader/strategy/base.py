@@ -1,4 +1,7 @@
 from abc import ABCMeta, abstractmethod
+from typing import Iterable
+
+from qstrader.event import Event
 
 
 class AbstractStrategy(object):
@@ -28,9 +31,11 @@ class Strategies(AbstractStrategy):
     """
     Strategies is a collection of strategy
     """
-    def __init__(self, *strategies):
-        self._lst_strategies = strategies
 
-    def calculate_signals(self, event):
+    def __init__(self, *strategies: AbstractStrategy):
+        self._lst_strategies: Iterable[AbstractStrategy] = strategies
+
+    def calculate_signals(self, event: Event):
+        strategy: AbstractStrategy
         for strategy in self._lst_strategies:
             strategy.calculate_signals(event)

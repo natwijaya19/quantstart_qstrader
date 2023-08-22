@@ -1,7 +1,8 @@
+import abc
 from abc import ABCMeta, abstractmethod
 
 
-class AbstractPositionSizer(object):
+class AbstractPositionSizer(abc.ABC):
     """
     The AbstractPositionSizer abstract class modifies
     the quantity (or not) of any share transacted

@@ -1,7 +1,8 @@
+import abc
 from abc import ABCMeta, abstractmethod
 
 
-class AbstractRiskManager(object):
+class AbstractRiskManager(abc.ABC):
     """
     The AbstractRiskManager abstract class lets the
     sized order through, creates the corresponding
