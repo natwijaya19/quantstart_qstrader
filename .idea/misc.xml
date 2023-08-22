@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="enabledOnReformat" value="true" />
+    <option name="pathToExecutable" value="C:\Users\kikim\AppData\Local\Programs\Python\Python311\Scripts\black.exe" />
+    <option name="sdkUUID" value="ff127c64-ceca-45c0-8580-15115455baec" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (quantstart_qstrader)" project-jdk-type="Python SDK" />
+</project>

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages  # Always prefer setuptools over distutils
+from setuptools import setup, find_packages, \
+    __version__  # Always prefer setuptools over distutils
 from os import path
 import io
 
@@ -30,15 +31,15 @@ setup(
     description='QuantStart.com - Advanced Trading Infrastructure',
     long_description=long_description,
 
-    # The project's main homepage.
-    url=__url__,
-
-    # Author details
-    author=__author__,
-    author_email=__email__,
-
-    # Choose your license
-    license=__license__,
+    # # The project's main homepage.
+    # url=__url__,
+    #
+    # # Author details
+    # author=__author__,
+    # author_email=__email__,
+    #
+    # # Choose your license
+    # license=__license__,
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

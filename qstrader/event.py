@@ -1,17 +1,33 @@
-from __future__ import print_function
+from __future__ import print_function, annotations
 
+import abc
 from enum import Enum
 
 
-EventType = Enum("EventType", "TICK BAR SIGNAL ORDER FILL SENTIMENT")
+# EventType = Enum("EventType", "TICK BAR SIGNAL ORDER FILL SENTIMENT")
+class EventType(Enum):
+    """
+    EventType is a base class providing an interface for all
+    subsequent (inherited) event types, that will trigger
+    further events in the trading infrastructure.
+    """
+    TICK = 1
+    BAR = 2
+    SIGNAL = 3
+    ORDER = 4
+    FILL = 5
+    SENTIMENT = 6
 
 
-class Event(object):
+class Event(abc.ABC):
     """
     Event is base class providing an interface for all subsequent
     (inherited) events, that will trigger further events in the
     trading infrastructure.
     """
+
+    # def __init__(self):
+    #     self.type: Enum|None = None
     @property
     def typename(self):
         return self.type.name
@@ -23,6 +39,7 @@ class TickEvent(Event):
     which is defined as a ticker symbol and associated best
     bid and ask from the top of the order book.
     """
+
     def __init__(self, ticker, time, bid, ask):
         """
         Initialises the TickEvent.
@@ -41,8 +58,11 @@ class TickEvent(Event):
 
     def __str__(self):
         return "Type: %s, Ticker: %s, Time: %s, Bid: %s, Ask: %s" % (
-            str(self.type), str(self.ticker),
-            str(self.time), str(self.bid), str(self.ask)
+            str(self.type),
+            str(self.ticker),
+            str(self.time),
+            str(self.bid),
+            str(self.ask),
         )
 
     def __repr__(self):
@@ -55,10 +75,18 @@ class BarEvent(Event):
     open-high-low-close-volume bar, as would be generated
     via common data providers such as Yahoo Finance.
     """
+
     def __init__(
-        self, ticker, time, period,
-        open_price, high_price, low_price,
-        close_price, volume, adj_close_price=None
+        self,
+        ticker,
+        time,
+        period,
+        open_price,
+        high_price,
+        low_price,
+        close_price,
+        volume,
+        adj_close_price=None,
     ):
         """
         Initialises the BarEvent.
@@ -119,7 +147,7 @@ class BarEvent(Event):
             1800: "30min",
             3600: "1hr",
             86400: "1day",
-            604800: "1wk"
+            604800: "1wk",
         }
         if self.period in lut:
             return lut[self.period]
@@ -127,15 +155,23 @@ class BarEvent(Event):
             return "%ssec" % str(self.period)
 
     def __str__(self):
-        format_str = "Type: %s, Ticker: %s, Time: %s, Period: %s, " \
-            "Open: %s, High: %s, Low: %s, Close: %s, " \
-            "Adj Close: %s, Volume: %s" % (
-                str(self.type), str(self.ticker), str(self.time),
-                str(self.period_readable), str(self.open_price),
-                str(self.high_price), str(self.low_price),
-                str(self.close_price), str(self.adj_close_price),
-                str(self.volume)
+        format_str = (
+            "Type: %s, Ticker: %s, Time: %s, Period: %s, "
+            "Open: %s, High: %s, Low: %s, Close: %s, "
+            "Adj Close: %s, Volume: %s"
+            % (
+                str(self.type),
+                str(self.ticker),
+                str(self.time),
+                str(self.period_readable),
+                str(self.open_price),
+                str(self.high_price),
+                str(self.low_price),
+                str(self.close_price),
+                str(self.adj_close_price),
+                str(self.volume),
             )
+        )
         return format_str
 
     def __repr__(self):
@@ -147,6 +183,7 @@ class SignalEvent(Event):
     Handles the event of sending a Signal from a Strategy object.
     This is received by a Portfolio object and acted upon.
     """
+
     def __init__(self, ticker, action, suggested_quantity=None):
         """
         Initialises the SignalEvent.
@@ -171,6 +208,7 @@ class OrderEvent(Event):
     The order contains a ticker (e.g. GOOG), action (BOT or SLD)
     and quantity.
     """
+
     def __init__(self, ticker, action, quantity):
         """
         Initialises the OrderEvent.
@@ -190,9 +228,8 @@ class OrderEvent(Event):
         Outputs the values within the OrderEvent.
         """
         print(
-            "Order: Ticker=%s, Action=%s, Quantity=%s" % (
-                self.ticker, self.action, self.quantity
-            )
+            "Order: Ticker=%s, Action=%s, Quantity=%s"
+            % (self.ticker, self.action, self.quantity)
         )
 
 
@@ -209,10 +246,7 @@ class FillEvent(Event):
     """
 
     def __init__(
-        self, timestamp, ticker,
-        action, quantity,
-        exchange, price,
-        commission
+        self, timestamp, ticker, action, quantity, exchange, price, commission
     ):
         """
         Initialises the FillEvent object.
@@ -241,6 +275,7 @@ class SentimentEvent(Event):
     with a ticker. Can be used for a generic "date-ticker-sentiment"
     service, often provided by many data vendors.
     """
+
     def __init__(self, timestamp, ticker, sentiment):
         """
         Initialises the SentimentEvent.
