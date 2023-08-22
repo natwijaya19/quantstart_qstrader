@@ -42,7 +42,7 @@ class LiquidateRebalancePositionSizer(AbstractPositionSizer):
             if cur_quantity > 0:
                 initial_order.action = "SLD"
                 initial_order.quantity = cur_quantity
-            else:
+            else:  # Assume cur_quantity <= 0
                 initial_order.action = "BOT"
                 initial_order.quantity = cur_quantity
         else:

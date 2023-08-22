@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import calendar
 import datetime
-from typing import List
 
 from munch import Munch
 
@@ -68,7 +67,7 @@ class MonthlyLiquidateRebalanceStrategy(AbstractStrategy):
             self.tickers_invested[ticker] = True
 
 
-def run(config, testing: bool, tickers: list[str], filename: str):
+def run(config: Munch, testing: bool, tickers: list[str], filename: str):
     # Backtest information
     title: list[str] = ["Monthly Liquidate/Rebalance on 60%/40% SPY/AGG Portfolio"]
     initial_equity = 500000.0
@@ -88,18 +87,20 @@ def run(config, testing: bool, tickers: list[str], filename: str):
     position_sizer = LiquidateRebalancePositionSizer(ticker_weights)
 
     # Set up the backtest
-    backtest = TradingSession(
-        config,
-        strategy,
-        tickers,
-        initial_equity,
-        start_date,
-        end_date,
-        events_queue,
-        position_sizer=position_sizer,
+
+    backtest: TradingSession = TradingSession(
+        config=config,
+        strategy=strategy,
+        tickers=tickers,
+        equity=initial_equity,
+        start_date=start_date,
+        end_date=end_date,
+        events_queue=events_queue,
         title=title,
         benchmark=tickers[0],
+        position_sizer=position_sizer,
     )
+
     results = backtest.start_trading(testing=testing)
     return results
 
