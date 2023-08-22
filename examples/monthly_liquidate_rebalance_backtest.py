@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import calendar
 import datetime
+from typing import List
+
+from munch import Munch
 
 from qstrader import settings
-from qstrader.strategy.base import AbstractStrategy
-from qstrader.position_sizer.rebalance import LiquidateRebalancePositionSizer
-from qstrader.event import SignalEvent, EventType, Event, BarEvent, TickEvent
 from qstrader.compat import queue
+from qstrader.event import SignalEvent, EventType, BarEvent, TickEvent
+from qstrader.position_sizer.rebalance import LiquidateRebalancePositionSizer
+from qstrader.strategy.base import AbstractStrategy
 from qstrader.trading_session import TradingSession
 
 
@@ -56,16 +59,18 @@ class MonthlyLiquidateRebalanceStrategy(AbstractStrategy):
         ):
             ticker: str = event.ticker
             if self.tickers_invested[ticker]:
-                liquidate_signal = SignalEvent(ticker, "EXIT")
+                liquidate_signal: SignalEvent = SignalEvent(ticker, "EXIT")
                 self.events_queue.put(liquidate_signal)
-            long_signal = SignalEvent(ticker, "BOT")
+
+            long_signal: SignalEvent = SignalEvent(ticker, "BOT")
             self.events_queue.put(long_signal)
+
             self.tickers_invested[ticker] = True
 
 
-def run(config, testing, tickers, filename):
+def run(config, testing: bool, tickers: list[str], filename: str):
     # Backtest information
-    title = ["Monthly Liquidate/Rebalance on 60%/40% SPY/AGG Portfolio"]
+    title: list[str] = ["Monthly Liquidate/Rebalance on 60%/40% SPY/AGG Portfolio"]
     initial_equity = 500000.0
     start_date = datetime.datetime(2006, 11, 1)
     end_date = datetime.datetime(2016, 10, 12)
@@ -102,7 +107,7 @@ def run(config, testing, tickers, filename):
 if __name__ == "__main__":
     # Configuration data
     testing = False
-    config = settings.from_file(settings.DEFAULT_CONFIG_FILENAME, testing)
-    tickers = ["SPY", "AGG"]
-    filename = None
+    config: Munch = settings.from_file(settings.DEFAULT_CONFIG_FILENAME, testing)
+    tickers: list[str] = ["SPY", "AGG"]
+    filename: None | str = None
     run(config, testing, tickers, filename)

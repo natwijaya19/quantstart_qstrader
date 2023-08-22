@@ -4,7 +4,7 @@ from .compat import PY2
 import numpy as np
 
 if PY2:
-    int_t = (int, long, np.int64)
+    int_t = (int, np.long, np.int64)
 else:
     int_t = (int, np.int64)
 
@@ -52,7 +52,7 @@ class PriceParser(object):
 
     @staticmethod
     @dispatch(float)
-    def display(x):  # flake8: noqa
+    def display(x:float)->float:  # flake8: noqa
         return round(x, 2)
 
     @staticmethod
